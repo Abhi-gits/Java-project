@@ -1,0 +1,12 @@
+CREATE DATABASE IF NOT EXISTS job_portal;
+USE job_portal;
+
+DROP TABLE IF EXISTS applications;
+
+CREATE TABLE IF NOT EXISTS applications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    job_role VARCHAR(50) NOT NULL,
+    skills VARCHAR(255) NOT NULL
+);
