@@ -45,9 +45,11 @@ public class ApplicationServlet extends HttpServlet {
         String name = trim(request.getParameter("name"));
         String email = trim(request.getParameter("email"));
         String jobRole = trim(request.getParameter("jobRole"));
+        String experience = trim(request.getParameter("experience"));
         String[] skillsArray = request.getParameterValues("skills");
+        String coverLetter = trim(request.getParameter("coverLetter"));
 
-        if (name.isEmpty() || email.isEmpty() || jobRole.isEmpty()) {
+        if (name.isEmpty() || email.isEmpty() || jobRole.isEmpty() || experience.isEmpty() || coverLetter.isEmpty()) {
             redirectWithError(response, "apply.jsp", "All required fields must be filled.");
             return;
         }
@@ -59,6 +61,11 @@ public class ApplicationServlet extends HttpServlet {
 
         if (skillsArray == null || skillsArray.length == 0) {
             redirectWithError(response, "apply.jsp", "Please select at least one skill.");
+            return;
+        }
+
+        if (coverLetter.length() < 15) {
+            redirectWithError(response, "apply.jsp", "Cover letter should be at least 15 characters.");
             return;
         }
 
@@ -87,6 +94,8 @@ public class ApplicationServlet extends HttpServlet {
             if (inserted) {
                 request.setAttribute("message", "Application submitted successfully.");
                 request.setAttribute("skillsCount", skillsCount);
+                request.setAttribute("experience", experience);
+                request.setAttribute("coverLetter", coverLetter);
             } else {
                 request.setAttribute("error", "Unable to save application. Please try again.");
             }

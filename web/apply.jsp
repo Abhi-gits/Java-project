@@ -40,12 +40,22 @@
             </select>
 
             <fieldset>
+                <legend>Experience Level</legend>
+                <label><input type="radio" name="experience" value="Fresher" required> Fresher</label>
+                <label><input type="radio" name="experience" value="1-3 years"> 1-3 years</label>
+                <label><input type="radio" name="experience" value="3+ years"> 3+ years</label>
+            </fieldset>
+
+            <fieldset>
                 <legend>Skills</legend>
                 <label><input type="checkbox" name="skills" value="Java"> Java</label>
                 <label><input type="checkbox" name="skills" value="Python"> Python</label>
                 <label><input type="checkbox" name="skills" value="SQL"> SQL</label>
                 <label><input type="checkbox" name="skills" value="Web Dev"> Web Dev</label>
             </fieldset>
+
+            <label for="coverLetter">Cover Letter</label>
+            <textarea id="coverLetter" name="coverLetter" rows="5" placeholder="Write a short cover letter..." maxlength="1000" required></textarea>
 
             <div class="form-actions">
                 <button type="submit">Submit Application</button>

@@ -43,6 +43,19 @@ body {
     flex-wrap: wrap;
 }
 
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-logo {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
+}
+
 .site-header h1 {
     margin: 0;
     font-size: 24px;
@@ -465,6 +478,19 @@ table th {
     margin: 8px 0 0;
 }
 
+.hero-brand-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.hero-logo {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(37, 99, 235, 0.2);
+}
+
 .hero-actions {
     margin-top: 22px;
     display: flex;
@@ -566,6 +592,15 @@ table th {
     .home-grid {
         grid-template-columns: 1fr;
     }
+
+    .hero-brand-row {
+        align-items: flex-start;
+    }
+
+    .hero-logo {
+        width: 38px;
+        height: 38px;
+    }
 }
 
 /* About page modern layout */
@@ -657,5 +692,80 @@ table th {
 
     .about-lead {
         font-size: 15px;
+    }
+}
+
+/* Result page modern layout */
+.result-page {
+    padding-top: 28px;
+    padding-bottom: 30px;
+}
+
+.result-card {
+    margin-top: 0;
+}
+
+.result-header p {
+    margin-top: -4px;
+    margin-bottom: 14px;
+    color: #64748b;
+}
+
+.result-summary {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.summary-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    border: 1px solid #cfe0ff;
+    background: #eef4ff;
+    color: #1e3a8a;
+    font-size: 13px;
+}
+
+.no-data-message {
+    margin-top: 14px;
+    background: #fff7ed;
+    border: 1px solid #fdba74;
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: #9a3412;
+    font-weight: 600;
+}
+
+.result-empty {
+    margin-top: 14px;
+    background: linear-gradient(180deg, #f8fbff, #edf3ff);
+    border: 1px dashed #bfd4ff;
+    border-radius: 10px;
+    padding: 14px;
+}
+
+.result-empty p {
+    margin: 0;
+    color: #334155;
+}
+
+.result-actions {
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 900px) {
+    .result-actions {
+        flex-direction: column;
+    }
+
+    .result-actions .cta-btn {
+        width: 100%;
     }
 }

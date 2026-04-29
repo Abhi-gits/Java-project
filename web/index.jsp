@@ -13,7 +13,10 @@
     <main class="container home-page">
         <section class="card home-hero">
             <p class="hero-tag">Smart Career Management</p>
-            <h2>Welcome to the Job Application Portal</h2>
+            <div class="hero-brand-row">
+                <img src="images/job-logo.svg" alt="Job Portal Logo" class="hero-logo">
+                <h2>Welcome to the Job Application Portal</h2>
+            </div>
             <p class="hero-text">
                 Submit job applications in minutes, organize candidate information centrally,
                 and search applications by role with a clean, modern experience.
