@@ -1,0 +1,155 @@
+-- =========================
+-- Department Table
+-- =========================
+CREATE TABLE Department (
+    Department_ID AUTOINCREMENT PRIMARY KEY,
+    Department_Name TEXT(100) NOT NULL
+);
+
+-- =========================
+-- Student Table
+-- =========================
+CREATE TABLE Student (
+    Student_ID AUTOINCREMENT PRIMARY KEY,
+    Name TEXT(100) NOT NULL,
+    Course TEXT(100),
+    Year INTEGER,
+    Gender TEXT(10),
+    Department_ID INTEGER,
+    FOREIGN KEY (Department_ID) REFERENCES Department(Department_ID)
+);
+
+-- =========================
+-- Event Category Table
+-- =========================
+CREATE TABLE Event_Category (
+    Category_ID AUTOINCREMENT PRIMARY KEY,
+    Category_Name TEXT(100) NOT NULL
+);
+
+-- =========================
+-- Organizer Table
+-- =========================
+CREATE TABLE Organizer (
+    Organizer_ID AUTOINCREMENT PRIMARY KEY,
+    Organizer_Name TEXT(100) NOT NULL
+);
+
+-- =========================
+-- Event Table
+-- =========================
+CREATE TABLE Event (
+    Event_ID AUTOINCREMENT PRIMARY KEY,
+    Event_Name TEXT(150) NOT NULL,
+    Category_ID INTEGER,
+    Event_Date DATETIME,
+    Organizer_ID INTEGER,
+    FOREIGN KEY (Category_ID) REFERENCES Event_Category(Category_ID),
+    FOREIGN KEY (Organizer_ID) REFERENCES Organizer(Organizer_ID)
+);
+
+-- =========================
+-- Participation Table
+-- =========================
+CREATE TABLE Participation (
+    Participation_ID AUTOINCREMENT PRIMARY KEY,
+    Student_ID INTEGER,
+    Event_ID INTEGER,
+    FOREIGN KEY (Student_ID) REFERENCES Student(Student_ID),
+    FOREIGN KEY (Event_ID) REFERENCES Event(Event_ID)
+);
+
+-- =========================
+-- Feedback Table
+-- =========================
+CREATE TABLE Feedback (
+    Feedback_ID AUTOINCREMENT PRIMARY KEY,
+    Participation_ID INTEGER,
+    Feedback_Rating INTEGER,
+    FOREIGN KEY (Participation_ID) REFERENCES Participation(Participation_ID)
+);
+
+-- =========================
+-- Club Table
+-- =========================
+CREATE TABLE Club (
+    Club_ID AUTOINCREMENT PRIMARY KEY,
+    Club_Name TEXT(100) NOT NULL,
+    Category TEXT(100)
+);
+
+-- =========================
+-- Club Membership Table
+-- =========================
+CREATE TABLE Club_Membership (
+    Membership_ID AUTOINCREMENT PRIMARY KEY,
+    Student_ID INTEGER,
+    Club_ID INTEGER,
+    FOREIGN KEY (Student_ID) REFERENCES Student(Student_ID),
+    FOREIGN KEY (Club_ID) REFERENCES Club(Club_ID)
+);
+
+-----------------------------------------------------
+-- SAMPLE DATA (Converted from your original inserts)
+-----------------------------------------------------
+
+-- Departments
+INSERT INTO Department (Department_Name) VALUES ('Computer Science');
+INSERT INTO Department (Department_Name) VALUES ('Information Technology');
+INSERT INTO Department (Department_Name) VALUES ('Electronics');
+
+-- Students (converted from users)
+INSERT INTO Student (Name, Course, Year, Gender, Department_ID)
+VALUES ('Ahmed Al Mansoori', 'BSc CS', 2, 'Male', 1);
+
+INSERT INTO Student (Name, Course, Year, Gender, Department_ID)
+VALUES ('Fatima Al Zahra', 'BSc IT', 3, 'Female', 2);
+
+INSERT INTO Student (Name, Course, Year, Gender, Department_ID)
+VALUES ('Omar Al Hashmi', 'BSc CS', 1, 'Male', 1);
+
+INSERT INTO Student (Name, Course, Year, Gender, Department_ID)
+VALUES ('Sarah Johnson', 'BSc IT', 2, 'Female', 2);
+
+INSERT INTO Student (Name, Course, Year, Gender, Department_ID)
+VALUES ('Ravi Patel', 'BSc Electronics', 4, 'Male', 3);
+
+-- Event Categories
+INSERT INTO Event_Category (Category_Name) VALUES ('Technical');
+INSERT INTO Event_Category (Category_Name) VALUES ('Cultural');
+INSERT INTO Event_Category (Category_Name) VALUES ('Sports');
+
+-- Organizers
+INSERT INTO Organizer (Organizer_Name) VALUES ('College Committee');
+INSERT INTO Organizer (Organizer_Name) VALUES ('Student Council');
+
+-- Events (converted from jobs)
+INSERT INTO Event (Event_Name, Category_ID, Event_Date, Organizer_ID)
+VALUES ('Hackathon', 1, #04/20/2026#, 1);
+
+INSERT INTO Event (Event_Name, Category_ID, Event_Date, Organizer_ID)
+VALUES ('Dance Competition', 2, #04/18/2026#, 2);
+
+INSERT INTO Event (Event_Name, Category_ID, Event_Date, Organizer_ID)
+VALUES ('Football Tournament', 3, #04/15/2026#, 1);
+
+-- Participation (converted from applications)
+INSERT INTO Participation (Student_ID, Event_ID) VALUES (1, 1);
+INSERT INTO Participation (Student_ID, Event_ID) VALUES (2, 2);
+INSERT INTO Participation (Student_ID, Event_ID) VALUES (3, 1);
+INSERT INTO Participation (Student_ID, Event_ID) VALUES (4, 3);
+INSERT INTO Participation (Student_ID, Event_ID) VALUES (5, 2);
+
+-- Feedback
+INSERT INTO Feedback (Participation_ID, Feedback_Rating) VALUES (1, 5);
+INSERT INTO Feedback (Participation_ID, Feedback_Rating) VALUES (2, 4);
+INSERT INTO Feedback (Participation_ID, Feedback_Rating) VALUES (3, 5);
+
+-- Clubs
+INSERT INTO Club (Club_Name, Category) VALUES ('Coding Club', 'Technical');
+INSERT INTO Club (Club_Name, Category) VALUES ('Dance Club', 'Cultural');
+
+-- Club Membership
+INSERT INTO Club_Membership (Student_ID, Club_ID) VALUES (1, 1);
+INSERT INTO Club_Membership (Student_ID, Club_ID) VALUES (2, 2);
+INSERT INTO Club_Membership (Student_ID, Club_ID) VALUES (3, 1);
