@@ -62,15 +62,16 @@
                 </div>
             <%
                 }
+            %>
 
-                                <%
-                                    if (applications != null) {
-                                        if (applications.isEmpty()) {
-                                %>
+            <%
+                if (applications != null) {
+                    if (applications.isEmpty()) {
+            %>
                                             <p class="no-data-message">No results found for the selected role.</p>
-                                <%
-                                        } else {
-                                %>
+            <%
+                    } else {
+            %>
                                             <h3>Search Results for: <%= searchRole %></h3>
                                             <div class="table-wrapper">
                                                 <table>
@@ -100,10 +101,10 @@
                                                     </tbody>
                                                 </table>
                                             </div>
-                                <%
-                                        }
-                                    }
-                                %>
+            <%
+                    }
+                }
+            %>
 
             <%
                 if (isEmptyState) {
