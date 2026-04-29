@@ -1,0 +1,112 @@
+----query used for creating database in MS Access
+
+
+
+CREATE TABLE users (
+    id AUTOINCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
+);
+
+CREATE UNIQUE INDEX idx_users_email ON users(email);
+
+CREATE TABLE jobs (
+    id AUTOINCREMENT PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    description VARCHAR(255),
+    location VARCHAR(100),
+    posted_date DATETIME
+);
+
+CREATE TABLE skills (
+    id  AUTOINCREMENT PRIMARY KEY,
+    skill_name VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE user_skills (
+    user_id INT,
+    skill_id INT,
+    PRIMARY KEY (user_id, skill_id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (skill_id) REFERENCES skills(id)
+);
+
+CREATE TABLE applications (
+    id AUTOINCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    job_id INT NOT NULL,
+    applied_date DATETIME,
+    status VARCHAR(50),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (job_id) REFERENCES jobs(id)
+);
+
+
+INSERT INTO users (name, email, [password])
+VALUES ('Ahmed Al Mansoori', 'ahmed.mansoori@example.com', 'pass123');
+
+INSERT INTO users (name, email, [password])
+VALUES ('Fatima Al Zahra', 'fatima.zahra@example.com', 'pass123');
+
+INSERT INTO users (name, email, [password])
+VALUES ('Omar Al Hashmi', 'omar.hashmi@example.com', 'pass123');
+
+INSERT INTO users (name, email, [password])
+VALUES ('Sarah Johnson', 'sarah.johnson@example.com', 'pass123');
+
+INSERT INTO users (name, email, [password])
+VALUES ('Ravi Patel', 'ravi.patel@example.com', 'pass123');
+
+
+
+
+INSERT INTO jobs (title, description, location, posted_date)
+VALUES ('Software Engineer', 'Backend development role', 'Dubai', #04/20/2026#);
+
+INSERT INTO jobs (title, description, location, posted_date)
+VALUES ('Frontend Developer', 'UI development using React', 'Abu Dhabi', #04/18/2026#);
+
+INSERT INTO jobs (title, description, location, posted_date)
+VALUES ('Data Analyst', 'Reporting and analytics', 'Sharjah', #04/15/2026#);
+
+
+
+INSERT INTO skills (skill_name) VALUES ('Java');
+INSERT INTO skills (skill_name) VALUES ('React');
+INSERT INTO skills (skill_name) VALUES ('Python');
+INSERT INTO skills (skill_name) VALUES ('SQL');
+INSERT INTO skills (skill_name) VALUES ('AWS');
+
+
+
+INSERT INTO user_skills (user_id, skill_id) VALUES (1, 1);
+INSERT INTO user_skills (user_id, skill_id) VALUES (1, 4);
+
+INSERT INTO user_skills (user_id, skill_id) VALUES (2, 2);
+
+INSERT INTO user_skills (user_id, skill_id) VALUES (3, 5);
+
+INSERT INTO user_skills (user_id, skill_id) VALUES (4, 4);
+
+INSERT INTO user_skills (user_id, skill_id) VALUES (5, 3);
+
+
+
+
+INSERT INTO applications (user_id, job_id, applied_date, status)
+VALUES (1, 1, #04/22/2026#, 'Pending');
+
+INSERT INTO applications (user_id, job_id, applied_date, status)
+VALUES (2, 2, #04/23/2026#, 'Reviewed');
+
+INSERT INTO applications (user_id, job_id, applied_date, status)
+VALUES (3, 1, #04/24/2026#, 'Shortlisted');
+
+INSERT INTO applications (user_id, job_id, applied_date, status)
+VALUES (4, 3, #04/25/2026#, 'Rejected');
+
+INSERT INTO applications (user_id, job_id, applied_date, status)
+VALUES (5, 2, #04/26/2026#, 'Pending');
+
+
