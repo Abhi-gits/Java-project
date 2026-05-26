@@ -12,7 +12,8 @@ import java.util.Map;
 
 public class DBConnection {
 
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/job_portal?useSSL=false&serverTimezone=UTC";
+    // Use 127.0.0.1 to avoid localhost IPv6/hostname resolution issues.
+    private static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/job_portal?allowPublicKeyRetrieval=true&sslMode=DISABLED&serverTimezone=UTC";
     private static final String DB_USERNAME = "root";
     private static final String DB_PASSWORD = "root";
 
@@ -38,18 +39,29 @@ public class DBConnection {
             String jobRole,
             String skills
     ) throws SQLException {
-        String sql = "INSERT INTO applications "
-                + "(name, email, job_role, skills) "
-                + "VALUES (?, ?, ?, ?)";
+        try (Connection connection = getConnection()) {
+            boolean statusColumnExists = hasStatusColumn(connection);
+            String sql;
+            if (statusColumnExists) {
+                sql = "INSERT INTO applications "
+                        + "(name, email, job_role, skills, status) "
+                        + "VALUES (?, ?, ?, ?, ?)";
+            } else {
+                sql = "INSERT INTO applications "
+                        + "(name, email, job_role, skills) "
+                        + "VALUES (?, ?, ?, ?)";
+            }
 
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, name);
-            statement.setString(2, email);
-            statement.setString(3, jobRole);
-            statement.setString(4, skills);
-
-            return statement.executeUpdate() > 0;
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, name);
+                statement.setString(2, email);
+                statement.setString(3, jobRole);
+                statement.setString(4, skills);
+                if (statusColumnExists) {
+                    statement.setString(5, "Pending");
+                }
+                return statement.executeUpdate() > 0;
+            }
         }
     }
 
@@ -77,5 +89,77 @@ public class DBConnection {
         }
 
         return records;
+    }
+
+    public static int getApplicationCount() throws SQLException {
+        String sql = "SELECT COUNT(*) AS total FROM applications";
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
+            if (resultSet.next()) {
+                return resultSet.getInt("total");
+            }
+        }
+        return 0;
+    }
+
+    public static List<Map<String, String>> getApplicationStatus(String email, Integer applicationId)
+            throws SQLException {
+        List<Map<String, String>> records = new ArrayList<>();
+        try (Connection connection = getConnection()) {
+            boolean statusColumnExists = hasStatusColumn(connection);
+            StringBuilder sql = new StringBuilder();
+            if (statusColumnExists) {
+                sql.append("SELECT id, name, email, job_role, status FROM applications WHERE 1=1");
+            } else {
+                sql.append("SELECT id, name, email, job_role FROM applications WHERE 1=1");
+            }
+
+            if (email != null && !email.trim().isEmpty()) {
+                sql.append(" AND email = ?");
+            }
+            if (applicationId != null) {
+                sql.append(" AND id = ?");
+            }
+            sql.append(" ORDER BY id DESC");
+
+            try (PreparedStatement statement = connection.prepareStatement(sql.toString())) {
+                int parameterIndex = 1;
+                if (email != null && !email.trim().isEmpty()) {
+                    statement.setString(parameterIndex++, email.trim());
+                }
+                if (applicationId != null) {
+                    statement.setInt(parameterIndex, applicationId);
+                }
+
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        Map<String, String> row = new HashMap<>();
+                        row.put("id", String.valueOf(resultSet.getInt("id")));
+                        row.put("name", resultSet.getString("name"));
+                        row.put("email", resultSet.getString("email"));
+                        row.put("job_role", resultSet.getString("job_role"));
+                        row.put("status", statusColumnExists
+                                ? resultSet.getString("status")
+                                : "Pending");
+                        records.add(row);
+                    }
+                }
+            }
+        }
+
+        return records;
+    }
+
+    private static boolean hasStatusColumn(Connection connection) throws SQLException {
+        String sql = "SELECT COUNT(*) AS total FROM information_schema.columns "
+                + "WHERE table_schema = DATABASE() AND table_name = 'applications' AND column_name = 'status'";
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
+            if (resultSet.next()) {
+                return resultSet.getInt("total") > 0;
+            }
+        }
+        return false;
     }
 }

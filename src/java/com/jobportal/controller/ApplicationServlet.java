@@ -34,6 +34,8 @@ public class ApplicationServlet extends HttpServlet {
             handleApplication(request, response);
         } else if ("search".equals(action)) {
             handleSearch(request, response);
+        } else if ("checkStatus".equals(action)) {
+            handleStatusCheck(request, response);
         } else {
             request.setAttribute("error", "Invalid action.");
             request.getRequestDispatcher("result.jsp").forward(request, response);
@@ -96,6 +98,7 @@ public class ApplicationServlet extends HttpServlet {
                 request.setAttribute("skillsCount", skillsCount);
                 request.setAttribute("experience", experience);
                 request.setAttribute("coverLetter", coverLetter);
+                request.setAttribute("applicationCount", DBConnection.getApplicationCount());
             } else {
                 request.setAttribute("error", "Unable to save application. Please try again.");
             }
@@ -119,10 +122,43 @@ public class ApplicationServlet extends HttpServlet {
             request.setAttribute("applications", applications);
             request.setAttribute("searchRole", searchRole);
             request.setAttribute("message", "Search completed.");
+            request.setAttribute("applicationCount", DBConnection.getApplicationCount());
             request.getRequestDispatcher("result.jsp").forward(request, response);
         } catch (SQLException ex) {
             request.setAttribute("error", "Database error: " + ex.getMessage());
             request.getRequestDispatcher("result.jsp").forward(request, response);
+        }
+    }
+
+    private void handleStatusCheck(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        String statusEmail = trim(request.getParameter("statusEmail"));
+        String statusApplicationId = trim(request.getParameter("statusApplicationId"));
+
+        if (statusEmail.isEmpty() && statusApplicationId.isEmpty()) {
+            redirectWithError(response, "status.jsp", "Enter email or application ID to check status.");
+            return;
+        }
+
+        Integer applicationId = null;
+        if (!statusApplicationId.isEmpty()) {
+            try {
+                applicationId = Integer.valueOf(statusApplicationId);
+            } catch (NumberFormatException ex) {
+                redirectWithError(response, "status.jsp", "Application ID must be a valid number.");
+                return;
+            }
+        }
+
+        try {
+            List<Map<String, String>> statusResults = DBConnection.getApplicationStatus(statusEmail, applicationId);
+            request.setAttribute("statusResults", statusResults);
+            request.setAttribute("statusEmail", statusEmail);
+            request.setAttribute("statusApplicationId", statusApplicationId);
+            request.getRequestDispatcher("status.jsp").forward(request, response);
+        } catch (SQLException ex) {
+            request.setAttribute("error", "Database error: " + ex.getMessage());
+            request.getRequestDispatcher("status.jsp").forward(request, response);
         }
     }
 

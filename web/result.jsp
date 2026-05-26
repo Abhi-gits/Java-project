@@ -23,6 +23,7 @@
                 String message = (String) request.getAttribute("message");
                 String error = (String) request.getAttribute("error");
                 Integer skillsCount = (Integer) request.getAttribute("skillsCount");
+                Integer applicationCount = (Integer) request.getAttribute("applicationCount");
                 String experience = (String) request.getAttribute("experience");
                 String coverLetter = (String) request.getAttribute("coverLetter");
                 String searchRole = (String) request.getAttribute("searchRole");
@@ -46,6 +47,11 @@
                         if (skillsCount != null) {
                     %>
                         <span class="summary-pill">Selected skills: <strong><%= skillsCount %></strong></span>
+                    <%
+                        }
+                        if (applicationCount != null) {
+                    %>
+                        <span class="summary-pill">Applications submitted: <strong><%= applicationCount %></strong></span>
                     <%
                         }
                         if (experience != null && !experience.isEmpty()) {

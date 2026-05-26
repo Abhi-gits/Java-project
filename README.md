@@ -65,6 +65,11 @@ Job Application Portal/
    - Database: `job_portal`
    - Table: `applications`
 
+### Database Script Files
+
+- `job_portal.sql`: Active MySQL schema used by the running web application.
+- `job_portal-database.txt`: Legacy/reference MS Access-style schema and seed script kept for documentation/migration reference only. It is not executed by this project runtime.
+
 ### Table Columns (Current)
 
 - `id` (AUTO_INCREMENT, PK)
@@ -96,21 +101,6 @@ Current defaults:
 5. Open:
    - `http://localhost:8080/job-application-portal/`
 
-## Run via Terminal (Build)
-
-From project root:
-
-```bash
-mvn clean package
-```
-
-Generated WAR:
-
-- `target/job-application-portal-1.0-SNAPSHOT.war`
-
-Deploy this WAR to Tomcat `webapps` folder, then open:
-
-- `http://localhost:8080/job-application-portal/`
 
 ## Main Pages
 
