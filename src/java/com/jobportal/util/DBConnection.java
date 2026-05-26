@@ -12,10 +12,10 @@ import java.util.Map;
 
 public class DBConnection {
 
-    // Use 127.0.0.1 to avoid localhost IPv6/hostname resolution issues.
-    private static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/job_portal?allowPublicKeyRetrieval=true&sslMode=DISABLED&serverTimezone=UTC";
-    private static final String DB_USERNAME = "root";
-    private static final String DB_PASSWORD = "root";
+    // Defaults keep local development simple, while env vars enable cloud deployment.
+    private static final String DEFAULT_DB_URL = "jdbc:mysql://127.0.0.1:3306/job_portal?allowPublicKeyRetrieval=true&sslMode=DISABLED&serverTimezone=UTC";
+    private static final String DEFAULT_DB_USERNAME = "root";
+    private static final String DEFAULT_DB_PASSWORD = "root";
 
     static {
         try {
@@ -30,7 +30,18 @@ public class DBConnection {
     }
 
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+        String dbUrl = getEnvOrDefault("DB_URL", DEFAULT_DB_URL);
+        String dbUsername = getEnvOrDefault("DB_USERNAME", DEFAULT_DB_USERNAME);
+        String dbPassword = getEnvOrDefault("DB_PASSWORD", DEFAULT_DB_PASSWORD);
+        return DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+    }
+
+    private static String getEnvOrDefault(String envKey, String defaultValue) {
+        String value = System.getenv(envKey);
+        if (value == null || value.trim().isEmpty()) {
+            return defaultValue;
+        }
+        return value.trim();
     }
 
     public static boolean insertApplication(

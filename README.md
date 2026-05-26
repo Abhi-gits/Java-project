@@ -80,17 +80,41 @@ Job Application Portal/
 
 ## Configure Database Credentials
 
-Update values in `src/java/com/jobportal/util/DBConnection.java` if needed:
+The application reads database credentials from environment variables:
 
 - `DB_URL`
 - `DB_USERNAME`
 - `DB_PASSWORD`
 
-Current defaults:
+If these are not set, local development defaults are used:
 
-- URL: `jdbc:mysql://localhost:3306/job_portal?useSSL=false&serverTimezone=UTC`
+- URL: `jdbc:mysql://127.0.0.1:3306/job_portal?allowPublicKeyRetrieval=true&sslMode=DISABLED&serverTimezone=UTC`
 - Username: `root`
 - Password: `root`
+
+## Deploy on Render
+
+This repository includes:
+
+- `Dockerfile` (multi-stage Maven build + Tomcat runtime)
+- `render.yaml` (Render Blueprint service definition)
+- `.dockerignore` (faster/cleaner container builds)
+
+### Steps
+
+1. Push this repo to GitHub.
+2. In Render, create a new service using **Blueprint** and select this repository.
+3. Set these required environment variables in Render:
+   - `DB_URL`
+   - `DB_USERNAME`
+   - `DB_PASSWORD`
+4. Deploy.
+
+Render provides a dynamic `PORT` automatically. The container startup script maps Tomcat to that port.
+
+### Health Check
+
+- Health check path is configured as `/` in `render.yaml`.
 
 ## Run in NetBeans (Recommended)
 
@@ -121,3 +145,5 @@ Current defaults:
 - **DB error on submit/search**: Verify MySQL is running and credentials are correct.
 - **UI not updating**: Rebuild/redeploy WAR and hard refresh browser (`Cmd/Ctrl + Shift + R`).
 - **Servlet import issues**: Ensure runtime is Tomcat 10+ (Jakarta), not Tomcat 9.
+- **Render deploy starts but app unavailable**: Confirm the service deployed from `Dockerfile` and health check path is `/`.
+- **Render DB connection error**: Verify `DB_URL`, `DB_USERNAME`, and `DB_PASSWORD` are set correctly in Render.
